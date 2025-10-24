@@ -1,14 +1,52 @@
 import './App.css'
+import {useDispatch} from 'react-redux'
+import { useState,useEffect } from 'react'
+import authService from './appwrite/auth'
+import { login, logout } from './store/authSlice'
+import Header from '../components/header/Header'
+import Footer from '../components/Footer/Footer'
+
 
 function App() {
-console.log(import.meta.env.VITE_SOME_KEY) // "123"
-console.log(import.meta.env.DB_PASSWORD) // undefined
+  const [loading,setLoading] = useState(true)
+  const dispatch = useDispatch()
 
-  return (
-    <>
-      <h1 className='text-4xl text-center py-10' >GOOD MORNING</h1>
-    </>
-  )
+useEffect(() => {
+    authService.getCurrentUser()
+      .then((userData) => {
+        if(userData){
+          dispatch(login({userData}))
+        } else {
+          dispatch(logout())
+        }
+      })
+      .finally(() => setLoading(false))
+}, [])
+
+  // return !loading ? (
+  //   <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
+  //       <div className='w-full block'>
+  //           <Header />
+  //             <main>
+  //              TODO : {/* <Outlet/> */}
+  //             </main>
+  //           <Footer />
+  //       </div>
+  //   </div>
+  // ) : null
+ return !loading ? (
+  <div className="min-h-screen flex items-center justify-center bg-gray-400">
+    <div className="w-full max-w-3xl text-center">
+      <Header />
+      <main>
+        TODO : {/* <Outlet/> */}
+      </main>
+      <Footer />
+    </div>
+  </div>
+) : null;
+
+
 }
 
 export default App

@@ -1,4 +1,4 @@
-import conf from '../conf.js'
+import conf from '../conf/conf.js'
 import { Client, Account, ID } from "appwrite";
 
 export class AuthService {
@@ -43,18 +43,34 @@ export class AuthService {
         }
     }
 
-    async getCurrentUSer(){
-        try {
-            const user = await this.account.get();
-            if (user) {
-                return user;
-            } else {
-                return null;
-            }
-        } catch (error) {
-            throw error;
-        }
+    // async getCurrentUser(){
+    //     try {
+    //         const user = await this.account.get();
+    //         if (user) {
+    //             return user;
+    //         } else {
+    //             return null;
+    //         }
+    //     } catch (error) {
+    //          if (error.code === 401) {
+    //         // User is not logged in
+    //         return null;
+    //     }
+    //         throw error;
+    //     }
+    // }
+    async getCurrentUser() {
+  try {
+    return await this.account.get();
+  } catch (error) {
+    if (error.code === 401) {
+      // User is not logged in
+      return null;
     }
+    throw error;
+  }
+}
+
 
     async logout(){
         try {
